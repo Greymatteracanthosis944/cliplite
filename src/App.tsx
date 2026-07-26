@@ -60,13 +60,29 @@ export default function App() {
     loadClips(search);
   }, [search, loadClips]);
 
+  // BUGFIX #5: Use a cancelled flag to prevent setState on an unmounted
+  // component. The async listen() can resolve after the component unmounts
+  // if the effect cleanup runs before the promise settles.
   useEffect(() => {
-    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+    let cleanupFn: (() => void) | undefined;
+
     (async () => {
-      const unlisten = await listen<ClipEntry>("new-clip", () => loadClips());
-      cleanup = unlisten;
+      const unlisten = await listen<ClipEntry>("new-clip", () => {
+        if (!cancelled) loadClips();
+      });
+      // Only store cleanup if we haven't been cancelled while waiting
+      if (!cancelled) {
+        cleanupFn = unlisten;
+      } else {
+        unlisten();
+      }
     })();
-    return () => cleanup?.();
+
+    return () => {
+      cancelled = true;
+      cleanupFn?.();
+    };
   }, [loadClips]);
 
   // --- Actions ---

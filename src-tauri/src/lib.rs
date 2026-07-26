@@ -28,14 +28,17 @@ fn get_clips(
     state.db.get_clips(limit, offset, &search)
 }
 
+/// BUGFIX #4: Query the clip by ID directly instead of scanning only the
+/// top 50 entries. Previously paste_clip failed for any clip outside the
+/// first page of results.
 #[tauri::command]
 fn paste_clip(state: State<AppState>, id: i64) -> Result<ClipEntry, String> {
-    let clips = state.db.get_clips(50, 0, "")?;
-    if let Some(clip) = clips.iter().find(|c| c.id == id) {
-        copy_to_clipboard(&clip.content)?;
-        Ok(clip.clone())
-    } else {
-        Err("Clip not found".to_string())
+    match state.db.get_clip_by_id(id)? {
+        Some(clip) => {
+            copy_to_clipboard(&clip.content)?;
+            Ok(clip)
+        }
+        None => Err("Clip not found".to_string()),
     }
 }
 
@@ -93,20 +96,42 @@ fn setup_clipboard_monitor<R: Runtime>(app_handle: AppHandle<R>, state: Arc<AppS
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let app_state = Arc::new(AppState {
-        db: Database::new("cliplite.db").expect("Failed to initialize database"),
-        monitor_running: Arc::new(AtomicBool::new(true)),
-    });
-
     tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
-        .manage(app_state.clone())
         .setup(move |app| {
-            let app_handle = app.handle().clone();
-            setup_clipboard_monitor(app_handle, app_state.clone());
+            // BUGFIX #1: Use Tauri's managed app data directory instead of
+            // a hardcoded relative path. This prevents write-permission
+            // crashes when the app is installed in system directories.
+            let app_data_dir = app
+                .path()
+                .app_data_dir()
+                .expect("Failed to resolve app data directory");
 
-            // Global shortcut: Ctrl+Shift+V
+            // Create the directory tree if it doesn't exist
+            std::fs::create_dir_all(&app_data_dir)
+                .expect("Failed to create app data directory");
+
+            let db_path = app_data_dir.join("cliplite.db");
+            let db_path_str = db_path
+                .to_str()
+                .expect("App data path contains invalid UTF-8");
+
+            eprintln!("ClipLite: database at {}", db_path_str);
+
+            let app_state = Arc::new(AppState {
+                db: Database::new(db_path_str).expect("Failed to initialize database"),
+                monitor_running: Arc::new(AtomicBool::new(true)),
+            });
+
+            app.manage(app_state.clone());
+
+            let app_handle = app.handle().clone();
+            setup_clipboard_monitor(app_handle, app_state);
+
+            // BUGFIX #3: Gracefully handle shortcut registration failure
+            // instead of panicking. If Ctrl+Shift+V is already claimed by
+            // another app, we fall back to tray-icon-only activation.
             #[cfg(desktop)]
             {
                 use tauri_plugin_global_shortcut::GlobalShortcutExt;
@@ -129,9 +154,18 @@ pub fn run() {
                         .build(),
                 )?;
 
-                app.global_shortcut()
-                    .register("Ctrl+Shift+V")
-                    .expect("Failed to register global shortcut");
+                match app.global_shortcut().register("Ctrl+Shift+V") {
+                    Ok(()) => {
+                        eprintln!("ClipLite: registered Ctrl+Shift+V global shortcut");
+                    }
+                    Err(e) => {
+                        eprintln!(
+                            "ClipLite: could not register Ctrl+Shift+V — {}. \
+                             The app is still usable via the system tray icon.",
+                            e
+                        );
+                    }
+                }
             }
 
             Ok(())

@@ -118,25 +118,61 @@ impl Database {
         Ok(deleted as u64)
     }
 
+    /// Get a single clip by ID — used by paste_clip to avoid the "top 50 only" bug.
+    pub fn get_clip_by_id(&self, id: i64) -> Result<Option<ClipEntry>, String> {
+        let conn = self.conn.lock().map_err(|e| format!("Lock error: {}", e))?;
+
+        let result = conn
+            .query_row(
+                "SELECT id, content, content_type, source_app, pinned, created_at
+                 FROM clips WHERE id = ?1",
+                params![id],
+                |row| {
+                    Ok(ClipEntry {
+                        id: row.get(0)?,
+                        content: row.get(1)?,
+                        content_type: row.get(2)?,
+                        source_app: row.get(3)?,
+                        pinned: row.get(4)?,
+                        created_at: row.get(5)?,
+                    })
+                },
+            );
+
+        match result {
+            Ok(entry) => Ok(Some(entry)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(e) => Err(format!("Query error: {}", e)),
+        }
+    }
+
     pub fn get_clips(&self, limit: i64, offset: i64, search: &str) -> Result<Vec<ClipEntry>, String> {
         let conn = self.conn.lock().map_err(|e| format!("Lock error: {}", e))?;
 
-        let query = if search.is_empty() {
-            "SELECT id, content, content_type, source_app, pinned, created_at
-             FROM clips ORDER BY id DESC LIMIT ?1 OFFSET ?2"
-                .to_string()
-        } else {
-            format!(
+        // BUGFIX #2: Parameterized LIKE instead of string interpolation.
+        // The search pattern is built in Rust and bound via ?1, eliminating
+        // SQL injection risk and quote-escaping edge cases.
+        let (query, params): (String, Vec<Box<dyn rusqlite::types::ToSql>>) = if search.is_empty() {
+            (
                 "SELECT id, content, content_type, source_app, pinned, created_at
-                 FROM clips WHERE content LIKE '%{}%' ORDER BY id DESC LIMIT ?1 OFFSET ?2",
-                search.replace('\'', "''")
+                 FROM clips ORDER BY id DESC LIMIT ?1 OFFSET ?2".to_string(),
+                vec![Box::new(limit), Box::new(offset)],
+            )
+        } else {
+            let pattern = format!("%{}%", search);
+            (
+                "SELECT id, content, content_type, source_app, pinned, created_at
+                 FROM clips WHERE content LIKE ?1 ORDER BY id DESC LIMIT ?2 OFFSET ?3".to_string(),
+                vec![Box::new(pattern), Box::new(limit), Box::new(offset)],
             )
         };
 
         let mut stmt = conn.prepare(&query).map_err(|e| format!("Prepare error: {}", e))?;
 
+        let param_refs: Vec<&dyn rusqlite::types::ToSql> = params.iter().map(|p| p.as_ref()).collect();
+
         let clips = stmt
-            .query_map(params![limit, offset], |row| {
+            .query_map(param_refs.as_slice(), |row| {
                 Ok(ClipEntry {
                     id: row.get(0)?,
                     content: row.get(1)?,

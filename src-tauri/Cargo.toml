@@ -5,7 +5,7 @@ description = "A clean, cross-platform, open-source clipboard manager"
 authors = ["ClipLite Contributors"]
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/cliplite/cliplite"
+repository = "https://github.com/codedbytahir/cliplite"
 
 [lib]
 name = "cliplite_lib"
